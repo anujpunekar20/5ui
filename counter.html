@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter App</title>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .outer {
+            display: flex;
+            flex-direction: column;
+            border: 2px solid;
+            border-color: black;
+            min-width: 300px;
+            max-width: fit-content;
+            border-radius: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0%;
+        }
+
+        input {
+            width: 100px;
+        }
+
+        button {
+            width: 100px;
+        }
+        hr{
+            width: 100%;
+            color: black;
+
+        }
+        h1{
+            padding-bottom: 0%;
+        }
+        .count{
+            margin-bottom: 8px;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="outer">
+        <h1>Counter</h1>
+        <hr>
+        <div class="count">
+            <input id="counter" type="number" value="0" readonly>
+            <button onclick="increment()">Count</button>
+        </div>
+
+    </div>
+
+</body>
+<script>
+    var counter = document.getElementById("counter");
+    function increment() {
+
+        counter.value = parseInt(counter.value) + 1;
+    }
+</script>
+
+</html>
