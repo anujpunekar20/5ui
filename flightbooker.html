@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Flight Booker</title>
+    <meta name="description" content="Flight Bokking test App">
+
+    <style>
+        body{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        }
+       #bookerbox{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: stretch;
+        border: 4px solid black;
+        width: fit-content;
+        border-radius: 2rem;
+        padding: 2rem;
+        height: 30vh;
+       } 
+       #bookerbody{
+        display: flex;
+        flex-direction: column;
+       }
+       #flightbookingForm{
+        display: flex;
+        flex-direction: column;
+        margin: 4px;
+        padding: 4px;
+       }
+       .inner{
+        padding: 0.5rem 1rem;
+        margin: 3% auto;
+        width:100%;
+        box-sizing:border-box;
+       }
+    </style>
+</head>
+<body>
+
+    <main id="bookerbox">
+        <div id="bookerheader">
+            <h3>Flight Booker</h3>
+        </div>
+        <div id="bookerbody">
+            <form onsubmit="" id="flightbookingForm" class="inner">
+                <select name="Journey-type" id="Journeytype" class="inner">
+                    <option value="One-way-flight">One-way-flight</option>
+                    <option value="Return-flight">Return flight</option>
+                </select>
+
+                <input type="text" name="DepartureDate" id="DepartureDate" placeholder="Departure Date"
+                    class="inner"></input>
+                <input name="ReturnDate" id="ReturnDate" placeholder="Return Date" class="inner" disabled></input>
+
+                <input type="submit" id="submit" value="Book" class="inner"></input>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const Journeytype = document.getElementById("Journeytype");
+        const Departure = document.getElementById("DepartureDate");
+        const ReturnDateblock = document.getElementById("ReturnDate");
+        const submitbtn = document.getElementById(submit);
+
+        Journeytype.addEventListener("change", () => {
+            ReturnDateblock.disabled = !ReturnDateblock.disabled;
+            ReturnDateblock.value = ""
+        })
+
+        //todays date
+        const tdate = new Date();
+        const day = tdate.getUTCDate();
+        const month = tdate.getUTCMonth() + 1;
+        const year = tdate.getUTCFullYear();
+
+        window.onload = () => {
+            const todaysdate = day + "." + month + "." + year;
+            Departure.value = todaysdate
+        }
+
+        // departure date
+        Departure.addEventListener("input", () => {
+            const departureDate = Departure.value.split('.');
+            if (!Isvaliddate(departureDate)) {
+                Departure.classList.add("red");
+            } else {
+                Departure.classList.remove("red");
+
+                // if return date is set and no error in departure date
+                const returnDate = ReturnDateblock.value.split('.');
+                if (!ReturnDateblock.disabled && Isvaliddate(returnDate)) {
+
+                    if (!Isreturnvalid(returnDate, departureDate)) {
+                        ReturnDateblock.classList.add("red");
+                    } else {
+                        ReturnDateblock.classList.remove("red");
+                    }
+                }
+            }
+        });
+
+        // return date 
+        ReturnDateblock.addEventListener("input", () => {
+            const returnDate = ReturnDateblock.value.split('.');
+            if (!Isvaliddate(returnDate)) {
+                ReturnDateblock.classList.add("red");
+            } else {
+                ReturnDateblock.classList.remove("red");
+
+                // no error in departure and return
+                if (!Departure.classList.contains("red")) {
+
+                    const departureDate = Departure.value.split('.');
+
+                    if (!Isreturnvalid(returnDate, departureDate)) {
+                        ReturnDateblock.classList.add("red");
+                    } else {
+                        ReturnDateblock.classList.remove("red");
+                    }
+                }
+            }
+
+        })
+
+        // compare date
+        const Isvaliddate = (dateblock) => {
+            let indate = dateblock[0];
+            let inmonth = dateblock[1];
+            let inyear = dateblock[2];
+
+            if (dateblock.length > 3 || isNaN(indate) || isNaN(inmonth) || isNaN(inyear) || parseInt(inyear) < year || inmonth > 12) {
+                return false;
+            }
+
+            indate = parseInt(indate);
+            inmonth = parseInt(inmonth);
+            inyear = parseInt(inyear);
+
+            if (inyear === year) {
+                if (inmonth < month) {
+                    return false;
+                }
+                if (inmonth === month && indate < day) return false;
+            }
+
+            var dayinmonth;
+            switch (inmonth) {
+                case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+                    dayinmonth = 31;
+                    break;
+                case 4: case 6: case 9: case 11:
+                    dayinmonth = 30;
+                    break;
+                case 2:
+                    if ((inyear % 4 === 0 && inyear % 100 !== 0) || (inyear % 400 === 0)) {
+                        dayinmonth = 29;
+                    } else {
+                        dayinmonth = 28;
+                    }
+                    break;
+            }
+
+            return indate <= dayinmonth;
+        }
+
+        // caompare return and departure addEventListener
+        const Isreturnvalid = (ret, dep) => {
+            
+            if (parseInt(ret[2]) < parseInt(dep[2])) return false;
+
+            if (parseInt(ret[2]) === parseInt(dep[2])) {
+                if (parseInt(ret[2]) < parseInt(dep[1])) {
+                    return false;
+                }
+                if (parseInt(ret[1]) === parseInt(dep[1]) && parseInt(ret[0]) < parseInt(dep[0])) return false;
+            }
+
+            return true;
+        }
+
+    </script>
+</body>
+
+</html>
